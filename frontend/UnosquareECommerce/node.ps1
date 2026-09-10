@@ -1,0 +1,1 @@
+Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", "docker run --rm -it -v $(pwd):/app -w /app --entrypoint sh node:24.15.0-alpine"

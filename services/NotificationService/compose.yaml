@@ -1,0 +1,9 @@
+﻿services:
+  notificationservice.api:
+    image: notificationservice.api
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: NotificationService.API/Dockerfile
+
