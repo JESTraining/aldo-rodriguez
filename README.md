@@ -257,3 +257,71 @@ Good luck! This challenge is designed to push your skills across the full spectr
 
 **Deadline**: 72 hours from start time
 **Submission**: GitHub repository with all deliverables
+
+# Code Challenge: Documentation
+
+## Architecture
+For this microservices-based project I am using the clean architecture approach to keep the different responsibilities and concepts separated each in its own C# project.
+
+The main services folder contains the different services that will be deployed in the project, each one having its own C# solution file. This decision is based on the fact that each service has its own database schema and can be deployed independently and prevents us from accidentally referencing other projects/services in the solution.
+
+The service projects are separated into the following project layers:
+
+### Service.API (Presentation Layer):
+This layer is where the requests are handled and passed to the appropriate service. Here we have all the configuration related to the endpoints and the services used to handle the requests. 
+
+### Service.Application (Domain Layer):
+Here we have the business logic of the services. It contains the entities and repositories interfaces that are used by the services to interact with the database and other external services.
+
+### Service.Application (Application Layer):
+This project contains the services that orchestrate the business logic and communicate with the infrastructure layer. Here we also have the DTO classes that are used to transfer data between the services and the presentation layer.
+
+### Service.Infrastructure (Infrastructure Layer):
+This layer contains the main EntityFramework(EF) DB context and the actual repositories used to retrieve and store data in the database. This is also where we will have the EF migrations and SQL scripts.
+
+### Frontend (Client Layer):
+Inside the main project's folder we have the Angular project placeholder. This application comes with a ready to execute a windows script that will install all the required dependencies and run the application. Here we will also have two windows scripts to run the application, one for local development with live updates and one for production.
+
+## Implementation Notes
+In the Microservices project I have implemented some helper and reusable code to help create services and other components of the project with less boilerplate.
+
+A few highlights of the implementation:
+- The services have a base interface and class with basic CRUD methods to reduce the boilerplate code. This way we can simply extend the base class and interface without extra code and have the service ready to be used.
+  - `IBaseService<T>`
+  - `BaseService<T>`
+- In the API initialization, I have separated some configuration from the main `Program.cs` file and created separate files to keep the main file clean and focused on the startup logic.
+  - `ServicesConfiguration.cs`
+  - `ProductEndpoints.cs`
+- I added docker support for both, the Microservices project and the Frontend project.
+  - The frontend project has two scripts for local development which allow to develop the application without even having Node.js installed, this is explained in the [setup section](#setup-instructions).
+  
+## Setup Instructions
+Here you can find the instructions to setup both projects. You are going to need some software installed to run both applications.
+- Backend: .NET 8 SDK
+- Frontend: Node.js (v18+)
+- Docker Desktop
+- Git
+- Your preferred IDE (Visual Studio, VS Code, Rider)
+
+### Frontend
+We use Docker compose to run the frontend application. We need to run the containers with Docker or use one of the two different files that are provided `angular-dev` and `angular-prod`. The development container will run the application in watch mode to detect all the changes made in the code and the production container will run the application in production mode.
+
+To run the frontend application in local development mode, you can have Node.js installed or use the provided windows script to install all the required dependencies and run a container and a PowerShell session with Node.js and npm installed. If you are using the script simply right-click the `node.ps1` file and select "Run with PowerShell".
+
+Having done that, now we can use Docker compose to run the application either in development mode or in production mode. The two different services are `angular-dev` and `angular-prod`. The development container will run the application in watch mode to detect all the changes made in the code and the production container will run the application in production mode.
+
+- Using the docker command for dev: docker compose up --build --watch angular-dev
+- Using the docker command for prod: docker compose up --build angular-prod
+- Using the Windows script: right-click the `docker-angular-prod.ps1` or `docker-angular-dev.ps1` file and select "Run with PowerShell".
+
+### Backend
+To run the backend application, you need to run the compose configuration in your desired IDE or run the Docker command inside the compose file's folder: `docker compose -p productservice up -d --build`.
+
+## Future Improvements
+Given more time, I would like or would have liked to:
+- Have some more time to deal with local environment setup and configuration.
+- Implement the frontend application.
+- Use correct mapping for the application services with AutoMapper or a custom solution.
+- Implement fluent validation for the request models.
+- Add tests for both projects.
+- Implement authentication and authorization with Firebase.

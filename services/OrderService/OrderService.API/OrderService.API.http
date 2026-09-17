@@ -1,0 +1,6 @@
+@Test = http://localhost:8080
+
+GET {{Test}}/weatherforecast/
+Accept: application/json
+
+###
